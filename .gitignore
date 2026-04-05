@@ -1,0 +1,341 @@
+# ============================================
+# Go 相关
+# ============================================
+# 编译产物
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.o
+*.a
+*.so
+
+# Go 工作空间文件
+go.work
+go.work.sum
+
+# 测试覆盖率
+*.coverprofile
+coverage.html
+coverage.out
+coverage.xml
+
+# ============================================
+# 构建和输出目录
+# ============================================
+output/*
+tmpbuild/*
+tmp/*
+tmp
+build/
+dist/
+bin/
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# ============================================
+# 依赖和包管理
+# ============================================
+# vendor 目录（使用 go mod download 替代，CI 中按需 go mod vendor）
+vendor/
+
+# ============================================
+# 环境变量和配置文件
+# ============================================
+.env
+.env.local
+.env.*.local
+*.env
+# 本地开发配置文件（禁止提交）
+*_dev.yaml
+*.dev.yaml
+*_local.yaml
+*.local.yaml
+config.local.*
+*.local.conf
+
+# ============================================
+# 本地软链接（由 scripts/link-common.sh / .py / .ps1 生成，勿提交）
+# ============================================
+backend-go/common
+backend-python/common
+docs/common
+
+# ============================================
+# IDE 和编辑器
+# ============================================
+# IntelliJ IDEA
+.idea
+.idea/*
+*.iml
+*.iws
+*.ipr
+
+# VSCode
+.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+.dir-locals.el
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ============================================
+# 操作系统文件
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================
+# 日志文件
+# ============================================
+*.log
+*.log.*
+logs/
+*.log.gz
+*.log.bz2
+*.log.xz
+
+# ============================================
+# 临时文件
+# ============================================
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+*.swp
+*.swo
+*~
+
+# ============================================
+# Python（如果项目中有 Python 脚本）
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.hypothesis/
+.tox/
+.nox/
+.python-version
+.direnv/
+.envrc
+
+# ============================================
+# 其他
+# ============================================
+README.html
+*.pyc
+*.pid
+*.seed
+*.pid.lock
+.npm
+.eslintcache
+.yarn-integrity
+node_modules/
+package-lock.json
+yarn.lock
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# 证书和密钥
+*.pem
+*.key
+*.crt
+*.cert
+*.p12
+*.pfx
+!*.example.pem
+!*.example.key
+
+# 压缩文件
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# ============================================
+# 前端常见
+# ============================================
+# Node.js / npm / yarn / pnpm
+node_modules/
+.npm
+.yarn-integrity
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
+.yarn/build-state.yml
+.pnpm-debug.log*
+.npmrc
+.yarnrc
+.yarnrc.yml
+.pnp.*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# 构建输出
+.next/
+.nuxt/
+.output/
+dist/
+out/
+.cache/
+.parcel-cache/
+.vite/
+.turbo/
+storybook-static/
+*.tsbuildinfo
+
+# 前端工具缓存
+.eslintcache
+.stylelintcache
+.prettierignore
+*.local
+
+# Vue
+.vue-tsc/
+
+# Angular
+.angular/
+
+# Svelte
+.svelte-kit/
+
+# 测试覆盖率（前端）
+coverage/
+.nyc_output/
+*.lcov
+
+# ============================================
+# Flutter / Dart
+# ============================================
+# 构建产物
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+*.iml
+*.ipr
+*.iws
+
+# Flutter 生成文件
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+
+# Android (Flutter)
+**/android/**/gradle-wrapper.jar
+**/android/.gradle/
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties
+*.jks
+
+# iOS (Flutter)
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/*sync/
+**/ios/**/.sconsign.dblite
+**/ios/**/.tags*
+**/ios/**/Podfile.lock
+**/ios/**/Pods/
+**/ios/**/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/ServiceDefinitions.json
+
+# Web (Flutter)
+**/web/.dart_tool/
+
+# 其他 Flutter
+*.log
+pubspec.lock
+.metadata
+.flutter-plugins-dependencies
+.flutter-plugins
