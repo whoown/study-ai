@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "plan": [
+    {
+      "id": "lint",
+      "title": "静态检查"
+    },
+    {
+      "id": "test",
+      "title": "运行单元测试"
+    },
+    {
+      "id": "deploy",
+      "title": "发布到预发环境"
+    }
+  ],
+  "state": {
+    "goal": "StudyFlow 发布流水线（教学模拟）",
+    "step_index": 3,
+    "completed": [
+      "lint",
+      "test",
+      "deploy"
+    ],
+    "artifacts": {
+      "lint": {
+        "ok": true,
+        "report": "lint passed"
+      },
+      "test": {
+        "ok": true,
+        "report": "test passed"
+      },
+      "deploy": {
+        "ok": true,
+        "report": "deploy passed"
+      }
+    },
+    "errors": []
+  },
+  "history": [
+    {
+      "event": "step_start",
+      "index": 0,
+      "id": "lint"
+    },
+    {
+      "event": "step_done",
+      "index": 0,
+      "id": "lint"
+    },
+    {
+      "event": "step_start",
+      "index": 1,
+      "id": "test"
+    },
+    {
+      "event": "step_done",
+      "index": 1,
+      "id": "test"
+    },
+    {
+      "event": "step_start",
+      "index": 2,
+      "id": "deploy"
+    },
+    {
+      "event": "step_done",
+      "index": 2,
+      "id": "deploy"
+    }
+  ]
+}

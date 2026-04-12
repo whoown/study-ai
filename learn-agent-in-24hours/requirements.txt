@@ -1,0 +1,10 @@
+openai
+python-dotenv
+pydantic
+langchain
+langchain-openai
+langgraph
+chromadb
+fastapi[standard]
+streamlit
+mcp
