@@ -1,45 +1,26 @@
 # 《24小时学会 Agent 开发》
 
-这是一套面向初学者的渐进式 Agent 教学工程。你会从最小的决策循环开始，逐步掌握 LLM 接入、ReAct、Function Calling、Rules、记忆、上下文管理、LangChain、LangGraph、MCP、RAG、多智能体、Human-in-the-Loop 以及部署上线。
+这是一套面向初学者的渐进式 Agent 教材。核心设计思想很简单：每一小时只比上一小时多学一点，这样你既不会一上来就被框架和术语压垮，也不会只会调用黑盒而不知道 Agent 的本质。
 
-本教程的设计原则很简单：
+## 你会如何学习
 
-- 每小时只新增一个核心能力，降低心智负担。
-- 每章都包含理论讲解与最小可运行代码。
-- 先理解本质，再引入框架，避免只会调用黑盒。
+- 前 1 到 8 小时：先用手写 Python 建立 Agent 骨架，理解模型、工具、循环、记忆和上下文。
+- 第 9 到 12 小时：开始引入 LangChain、LangGraph、MCP 和一个小型实战项目。
+- 第 13 到 18 小时：进入 Embedding、RAG、主动检索、规划、反思和状态持久化。
+- 第 19 到 24 小时：继续学习 Skills、多智能体、Human-in-the-Loop 和部署上线。
 
-## 目录说明
+## 为什么建议整仓只维护一份 requirements
 
-- `core/`：课程设计说明与完整 syllabus。
-- `第X小时：主题/README.md`：本章讲解文档。
-- `第X小时：主题/src/main.py`：本章可运行案例入口。
-- `run_demo.py`：统一运行脚本。
-- `.env.example`：模型配置模板。
-- `requirements.txt`：共享依赖列表。
-
-## 为什么只维护一份依赖
-
-建议整个工程只使用一份 `requirements.txt`，并配套一份 `.venv` 虚拟环境。
-
-这样做的好处是：
-
-- 学习者只需要安装一次依赖。
-- 前后章节可以平滑共享模型客户端、框架与部署能力。
-- 不会因为 24 份依赖文件而增加维护成本。
+建议整套课共享一份 `requirements.txt` 和一个 `.venv` 虚拟环境。这样做对初学者最友好：只安装一次依赖，就能顺着 24 节课一路往后学，不会把大量精力耗在重复配环境上。
 
 ## 环境准备
 
-建议使用 Python 3.11 及以上版本。
-
 ```bash
-cd learn-agent-in-24hours
-python3 -m venv .venv
-source .venv/bin/activate
+python -m venv .venv
 pip install -r requirements.txt
-cp .env.example .env
 ```
 
-然后编辑 `.env`，填入自己的模型配置：
+把 `.env.example` 复制为 `.env` 后，填入兼容 OpenAI 风格的模型配置：
 
 ```bash
 OPENAI_API_KEY=你的密钥
@@ -47,62 +28,29 @@ OPENAI_BASE_URL=https://api.openai.com/v1
 OPENAI_MODEL=gpt-4.1-mini
 ```
 
-如果你使用 DeepSeek 一类 OpenAI 兼容服务，可以把 `OPENAI_BASE_URL` 改为对应地址，例如 `https://api.deepseek.com`，并将 `OPENAI_MODEL` 改为相应模型名。
+如果你使用 DeepSeek 一类兼容 OpenAI 协议的服务，只需要把 `OPENAI_BASE_URL` 和 `OPENAI_MODEL` 换成对应值即可。
 
 ## 如何运行
 
-列出所有章节：
-
 ```bash
 python run_demo.py --list
-```
-
-运行指定章节：
-
-```bash
 python run_demo.py 1
 python run_demo.py 12
 python run_demo.py 24
 ```
 
-你也可以直接进入某一章目录运行：
+也可以直接进入某一章目录：
 
 ```bash
-cd "第1小时:理解最小 Agent"
+cd "第1小时-理解最小 Agent"
 python src/main.py
 ```
 
-## 学习建议
+## 推荐阅读方式
 
-推荐你按照章节顺序推进，因为后面的章节默认你已经掌握前面的概念。如果你只是想快速看某个主题，也可以单独进入对应目录阅读 `README.md` 并运行案例。
+1. 先看本章 README，弄清楚这一小时新增了什么能力。
+2. 再运行 `src/main.py`，观察中间过程打印。
+3. 对照源码里的文件头注释、函数注释和关键逻辑注释理解实现。
+4. 最后自己改几个参数、提示词、工具或状态结构。
 
-阅读顺序建议如下：
-
-1. 先看本章目标，明确这小时只学什么。
-2. 再运行 `src/main.py`，观察程序输出。
-3. 然后对照 README 中的代码讲解理解关键机制。
-4. 最后尝试自己改动提示词、工具、状态结构或流程逻辑。
-
-## 课程阶段
-
-### 第一阶段：Agent 基础心智模型
-
-- 第 1-8 小时：最小 Agent、真实 LLM、ReAct、函数调用、规则、记忆、上下文窗口。
-
-### 第二阶段：框架与标准协议
-
-- 第 9-12 小时：LangChain、LangGraph、MCP、自动调研 Agent。
-
-### 第三阶段：检索、规划、反思与状态
-
-- 第 13-18 小时：Embedding、RAG、主动检索、规划执行、反思纠错、状态持久化。
-
-### 第四阶段：可组合与可上线
-
-- 第 19-24 小时：Skills、多智能体、Human-in-the-Loop、API 与 UI 部署。
-
-## 注意事项
-
-- 部分章节依赖真实模型服务；如果没有配置 `.env`，代码会打印提示并走教学化降级分支。
-- 课程后半段会引入 LangChain、LangGraph、Chroma、FastAPI、Streamlit 等依赖，但示例都会尽量保持最小规模。
-- 当前仓库目标是教学可读性，不是直接生产可用。
+学习 Agent，真正重要的不是背术语，而是逐步建立完整心智模型：`模型 + 工具 + 循环 + 记忆/状态 + 检索/协议 + 编排 + 部署`。
