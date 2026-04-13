@@ -104,5 +104,5 @@ Checkpoint 的保存频率直接影响系统的性能和恢复能力之间的平
 
 ```bash
 cd "第18小时-状态持久化"
-python src/main.py
+python main.py
 ```

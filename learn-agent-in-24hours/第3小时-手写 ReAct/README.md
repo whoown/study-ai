@@ -74,5 +74,5 @@ ReAct 通过引入 Action 和 Observation，让模型能够在推理过程中获
 
 ```bash
 cd "第3小时-手写 ReAct"
-python src/main.py
+python main.py
 ```

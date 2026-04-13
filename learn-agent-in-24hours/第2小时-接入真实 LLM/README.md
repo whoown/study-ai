@@ -64,5 +64,5 @@ Fallback 设计还涉及一个重要的权衡：**可用性 vs 准确性**。降
 
 ```bash
 cd "第2小时-接入真实 LLM"
-python src/main.py
+python main.py
 ```

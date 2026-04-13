@@ -78,5 +78,5 @@ MCP 协议与传输层解耦，目前主要支持两种传输方式：
 
 ```bash
 cd "第11小时-MCP 入门"
-python src/main.py
+python main.py
 ```

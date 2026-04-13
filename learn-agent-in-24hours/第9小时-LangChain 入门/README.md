@@ -68,5 +68,5 @@ LangChain 提供了多种注册方式：使用 `@tool` 装饰器直接标注 Pyt
 
 ```bash
 cd "第9小时-LangChain 入门"
-python src/main.py
+python main.py
 ```

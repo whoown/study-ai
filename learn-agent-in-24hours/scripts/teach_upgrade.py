@@ -24,13 +24,13 @@ def funcs(p):
     t=p.read_text(encoding='utf-8'); m=ast.parse(t); return [n.name for n in m.body if isinstance(n,ast.FunctionDef)],t
 
 def root_readme():
-    return textwrap.dedent('''# 《24小时学会 Agent 开发》\n\n这是一套面向初学者的渐进式 Agent 教材。核心设计思想很简单：每一小时只比上一小时多学一点，这样你既不会一上来就被框架和术语压垮，也不会只会调用黑盒而不知道 Agent 的本质。\n\n## 你会如何学习\n\n- 前 1 到 8 小时：先用手写 Python 建立 Agent 骨架，理解模型、工具、循环、记忆和上下文。\n- 第 9 到 12 小时：开始引入 LangChain、LangGraph、MCP 和一个小型实战项目。\n- 第 13 到 18 小时：进入 Embedding、RAG、主动检索、规划、反思和状态持久化。\n- 第 19 到 24 小时：继续学习 Skills、多智能体、Human-in-the-Loop 和部署上线。\n\n## 为什么建议整仓只维护一份 requirements\n\n建议整套课共享一份 `requirements.txt` 和一个 `.venv` 虚拟环境。这样做对初学者最友好：只安装一次依赖，就能顺着 24 节课一路往后学，不会把大量精力耗在重复配环境上。\n\n## 环境准备\n\n```bash\npython -m venv .venv\npip install -r requirements.txt\n```\n\n把 `.env.example` 复制为 `.env` 后，填入兼容 OpenAI 风格的模型配置：\n\n```bash\nOPENAI_API_KEY=你的密钥\nOPENAI_BASE_URL=https://api.openai.com/v1\nOPENAI_MODEL=gpt-4.1-mini\n```\n\n如果你使用 DeepSeek 一类兼容 OpenAI 协议的服务，只需要把 `OPENAI_BASE_URL` 和 `OPENAI_MODEL` 换成对应值即可。\n\n## 如何运行\n\n```bash\npython run_demo.py --list\npython run_demo.py 1\npython run_demo.py 12\npython run_demo.py 24\n```\n\n也可以直接进入某一章目录：\n\n```bash\ncd "第1小时-理解最小 Agent"\npython src/main.py\n```\n\n## 推荐阅读方式\n\n1. 先看本章 README，弄清楚这一小时新增了什么能力。\n2. 再运行 `src/main.py`，观察中间过程打印。\n3. 对照源码里的文件头注释、函数注释和关键逻辑注释理解实现。\n4. 最后自己改几个参数、提示词、工具或状态结构。\n\n学习 Agent，真正重要的不是背术语，而是逐步建立完整心智模型：`模型 + 工具 + 循环 + 记忆/状态 + 检索/协议 + 编排 + 部署`。\n''')
+    return textwrap.dedent('''# 《24小时学会 Agent 开发》\n\n这是一套面向初学者的渐进式 Agent 教材。核心设计思想很简单：每一小时只比上一小时多学一点，这样你既不会一上来就被框架和术语压垮，也不会只会调用黑盒而不知道 Agent 的本质。\n\n## 你会如何学习\n\n- 前 1 到 8 小时：先用手写 Python 建立 Agent 骨架，理解模型、工具、循环、记忆和上下文。\n- 第 9 到 12 小时：开始引入 LangChain、LangGraph、MCP 和一个小型实战项目。\n- 第 13 到 18 小时：进入 Embedding、RAG、主动检索、规划、反思和状态持久化。\n- 第 19 到 24 小时：继续学习 Skills、多智能体、Human-in-the-Loop 和部署上线。\n\n## 为什么建议整仓只维护一份 requirements\n\n建议整套课共享一份 `requirements.txt` 和一个 `.venv` 虚拟环境。这样做对初学者最友好：只安装一次依赖，就能顺着 24 节课一路往后学，不会把大量精力耗在重复配环境上。\n\n## 环境准备\n\n```bash\npython -m venv .venv\npip install -r requirements.txt\n```\n\n把 `.env.example` 复制为 `.env` 后，填入兼容 OpenAI 风格的模型配置：\n\n```bash\nOPENAI_API_KEY=你的密钥\nOPENAI_BASE_URL=https://api.openai.com/v1\nOPENAI_MODEL=gpt-4.1-mini\n```\n\n如果你使用 DeepSeek 一类兼容 OpenAI 协议的服务，只需要把 `OPENAI_BASE_URL` 和 `OPENAI_MODEL` 换成对应值即可。\n\n## 如何运行\n\n```bash\npython run_demo.py --list\npython run_demo.py 1\npython run_demo.py 12\npython run_demo.py 24\n```\n\n也可以直接进入某一章目录：\n\n```bash\ncd "第1小时-理解最小 Agent"\npython main.py\n```\n\n## 推荐阅读方式\n\n1. 先看本章 README，弄清楚这一小时新增了什么能力。\n2. 再运行 `main.py`，观察中间过程打印。\n3. 对照源码里的文件头注释、函数注释和关键逻辑注释理解实现。\n4. 最后自己改几个参数、提示词、工具或状态结构。\n\n学习 Agent，真正重要的不是背术语，而是逐步建立完整心智模型：`模型 + 工具 + 循环 + 记忆/状态 + 检索/协议 + 编排 + 部署`。\n''')
 
 def lesson_md(folder,fs):
     k,s,cs=pick(folder.name); num=re.search(r'第(\d+)小时',folder.name).group(1)
     items='\n'.join([f'- `{c}`：这是本章必须抓住的关键词，建议你运行代码时带着它去观察程序行为。' for c in cs])
     fmap='\n'.join([f'- `{f}`：{fn_note(f)}' for f in fs])
-    return f"# 第 {num} 小时：{k}\n\n## 本章定位\n\n{s}\n\n这是一节面向初学者的渐进式课程。阅读时请先问自己：这一章比上一章究竟多了什么？只有把这个问题答清楚，后面的框架、协议和工程实践才不会变成一堆孤立名词。\n\n## 先建立直觉\n\n你可以把这一章理解成：在上一章已有能力的基础上，再给 Agent 补上一块新的能力拼图。学习重点不是把 API 背下来，而是看清这块拼图在整体系统里处于什么位置、解决什么问题。\n\n## 核心概念\n\n{items}\n\n## 对照源码应该怎么读\n\n本章主代码在 `src/main.py`。建议按下面顺序阅读：\n\n1. 先看文件头注释，建立全局视图。\n2. 再看 `main()`，确认案例是怎么启动的。\n3. 接着找主流程函数，理解这章的执行主线。\n4. 最后回看辅助函数和降级分支，把细节补齐。\n\n### 代码阅读地图\n\n{fmap}\n\n## 新手最容易卡住的点\n\n- 不要只看最终输出，更要看中间的状态变化、工具调用、路由或消息累积。\n- 不要把“能跑”误当成“学会”。你至少应该说得清每个关键函数为什么存在。\n- 如果一时看不懂，先运行案例，再回来对照日志看代码，理解会快很多。\n\n## 建议动手实验\n\n- 修改默认输入，观察流程是否发生变化。\n- 故意改坏一个关键函数，再运行一次，看系统会在哪一步失效。\n- 对照上一章，找出本章新增的代码区域。\n\n## 运行方式\n\n```bash\ncd \"{folder.name}\"\npython src/main.py\n```\n"
+    return f"# 第 {num} 小时：{k}\n\n## 本章定位\n\n{s}\n\n这是一节面向初学者的渐进式课程。阅读时请先问自己：这一章比上一章究竟多了什么？只有把这个问题答清楚，后面的框架、协议和工程实践才不会变成一堆孤立名词。\n\n## 先建立直觉\n\n你可以把这一章理解成：在上一章已有能力的基础上，再给 Agent 补上一块新的能力拼图。学习重点不是把 API 背下来，而是看清这块拼图在整体系统里处于什么位置、解决什么问题。\n\n## 核心概念\n\n{items}\n\n## 对照源码应该怎么读\n\n本章主代码在 `main.py`。建议按下面顺序阅读：\n\n1. 先看文件头注释，建立全局视图。\n2. 再看 `main()`，确认案例是怎么启动的。\n3. 接着找主流程函数，理解这章的执行主线。\n4. 最后回看辅助函数和降级分支，把细节补齐。\n\n### 代码阅读地图\n\n{fmap}\n\n## 新手最容易卡住的点\n\n- 不要只看最终输出，更要看中间的状态变化、工具调用、路由或消息累积。\n- 不要把“能跑”误当成“学会”。你至少应该说得清每个关键函数为什么存在。\n- 如果一时看不懂，先运行案例，再回来对照日志看代码，理解会快很多。\n\n## 建议动手实验\n\n- 修改默认输入，观察流程是否发生变化。\n- 故意改坏一个关键函数，再运行一次，看系统会在哪一步失效。\n- 对照上一章，找出本章新增的代码区域。\n\n## 运行方式\n\n```bash\ncd \"{folder.name}\"\npython main.py\n```\n"
 
 def mod_doc(folder):
     k,s,_=pick(folder.name); num=re.search(r'第(\d+)小时',folder.name).group(1)
@@ -58,7 +58,7 @@ def rewrite_code(folder,p,text):
 
 (R/'README.md').write_text(root_readme(),encoding='utf-8')
 for folder in L:
-    mp=folder/'src'/'main.py'; rp=folder/'README.md'
+    mp=folder/'main.py'; rp=folder/'README.md'
     fs,txt=funcs(mp)
     rp.write_text(lesson_md(folder,fs),encoding='utf-8')
     rewrite_code(folder,mp,txt)

@@ -72,5 +72,5 @@ Guardrails 的必要性可以从三个维度理解。第一是**安全性**：Ag
 
 ```bash
 cd "第6小时-规则系统"
-python src/main.py
+python main.py
 ```

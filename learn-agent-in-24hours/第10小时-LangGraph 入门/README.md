@@ -80,5 +80,5 @@ LangGraph 采用的是**显式图**模式：开发者用节点和边构建出完
 
 ```bash
 cd "第10小时-LangGraph 入门"
-python src/main.py
+python main.py
 ```

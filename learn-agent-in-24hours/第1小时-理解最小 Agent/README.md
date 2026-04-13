@@ -64,5 +64,5 @@ Observation 的质量直接影响 Agent 的表现。如果工具只返回"成功
 
 ```bash
 cd "第1小时-理解最小 Agent"
-python src/main.py
+python main.py
 ```

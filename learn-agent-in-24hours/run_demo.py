@@ -18,7 +18,7 @@ def discover_hours() -> dict[int, Path]:
             continue
         match = HOUR_PATTERN.match(child.name)
         if match:
-            script_path = child / "src" / "main.py"
+            script_path = child / "main.py"
             readme_path = child / "README.md"
             # 只把真正落地了教程文件的目录视为可运行章节，避免空占位目录污染结果。
             if not script_path.exists() or not readme_path.exists():
@@ -40,9 +40,9 @@ def run_hour(hour: int, hours: dict[int, Path]) -> int:
         print("你可以先运行 `python run_demo.py --list` 查看可用章节。")
         return 1
 
-    script_path = target / "src" / "main.py"
+    script_path = target / "main.py"
     if not script_path.exists():
-        print(f"{target.name} 下还没有 `src/main.py`。")
+        print(f"{target.name} 下还没有 `main.py`。")
         return 1
 
     print(f"正在运行：{target.name}", flush=True)

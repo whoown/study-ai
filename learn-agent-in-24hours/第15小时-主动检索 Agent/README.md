@@ -76,5 +76,5 @@ Agentic RAG 是传统 RAG 向 Agent 范式演进的方向。在传统 RAG 中，
 
 ```bash
 cd "第15小时-主动检索 Agent"
-python src/main.py
+python main.py
 ```

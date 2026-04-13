@@ -43,13 +43,13 @@ python run_demo.py 24
 
 ```bash
 cd "第1小时-理解最小 Agent"
-python src/main.py
+python main.py
 ```
 
 ## 推荐阅读方式
 
 1. 先看本章 README，弄清楚这一小时新增了什么能力。
-2. 再运行 `src/main.py`，观察中间过程打印。
+2. 再运行 `main.py`，观察中间过程打印。
 3. 对照源码里的文件头注释、函数注释和关键逻辑注释理解实现。
 4. 最后自己改几个参数、提示词、工具或状态结构。
 

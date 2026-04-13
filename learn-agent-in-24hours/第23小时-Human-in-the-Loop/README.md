@@ -91,5 +91,5 @@ HITL 不仅是技术问题，也是用户体验问题。审批者的体验直接
 
 ```bash
 cd "第23小时-Human-in-the-Loop"
-python src/main.py
+python main.py
 ```
