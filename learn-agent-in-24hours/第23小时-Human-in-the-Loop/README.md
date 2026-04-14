@@ -89,7 +89,8 @@ HITL 不仅是技术问题，也是用户体验问题。审批者的体验直接
 
 ## 运行方式
 
+请在仓库根目录运行：
+
 ```bash
-cd "第23小时-Human-in-the-Loop"
-python main.py
+python run_demo 23
 ```

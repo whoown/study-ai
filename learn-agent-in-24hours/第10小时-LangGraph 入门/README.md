@@ -78,7 +78,8 @@ LangGraph 采用的是**显式图**模式：开发者用节点和边构建出完
 
 ## 运行方式
 
+请在仓库根目录运行：
+
 ```bash
-cd "第10小时-LangGraph 入门"
-python main.py
+python run_demo 10
 ```

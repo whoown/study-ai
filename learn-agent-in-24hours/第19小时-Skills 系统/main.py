@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 # 将工程根目录加入路径，便于加载上一级 .env（与 run_demo.py 行为一致）
-_ROOT = Path(__file__).resolve().parents[2]
+_ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 

@@ -11,11 +11,6 @@
 本章新增能力：先生成，再审查，再修订。
 如果你是初学者，建议一边运行一边对照源码，不要只静态阅读。
 """
-# -*- coding: utf-8 -*-
-"""
-第 17 小时：反思纠错 — 草稿、批评（reflection）、修订（revise）闭环。
-"""
-
 from __future__ import annotations
 
 import json
@@ -26,7 +21,7 @@ from typing import Any
 
 from dotenv import load_dotenv
 
-_ROOT = Path(__file__).resolve().parents[2]
+_ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(_ROOT / ".env")
 
 EVIDENCE = [

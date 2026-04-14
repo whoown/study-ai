@@ -62,7 +62,8 @@ Observation 的质量直接影响 Agent 的表现。如果工具只返回"成功
 
 ## 运行方式
 
+请在仓库根目录运行：
+
 ```bash
-cd "第1小时-理解最小 Agent"
-python main.py
+python run_demo 1
 ```

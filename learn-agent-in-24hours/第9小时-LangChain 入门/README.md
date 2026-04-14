@@ -66,7 +66,8 @@ LangChain 提供了多种注册方式：使用 `@tool` 装饰器直接标注 Pyt
 
 ## 运行方式
 
+请在仓库根目录运行：
+
 ```bash
-cd "第9小时-LangChain 入门"
-python main.py
+python run_demo 9
 ```

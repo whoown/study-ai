@@ -19,12 +19,14 @@ import re
 import urllib.error
 import urllib.request
 from typing import Any, Callable, Dict, List, Optional, Tuple
+from pathlib import Path
 
 # 可选加载 .env（与仓库根目录示例一致）
 try:
     from dotenv import load_dotenv
 
-    load_dotenv()
+    _ROOT = Path(__file__).resolve().parents[1]
+    load_dotenv(_ROOT / '.env')
 except ImportError:
     pass
 

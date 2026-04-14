@@ -11,11 +11,6 @@
 本章新增能力：把检索结果接回生成流程。
 如果你是初学者，建议一边运行一边对照源码，不要只静态阅读。
 """
-# -*- coding: utf-8 -*-
-"""
-第 14 小时：RAG 基础 — 分块、索引、检索、拼 Prompt、生成（可模拟）。
-"""
-
 from __future__ import annotations
 
 import math
@@ -26,7 +21,7 @@ from typing import Sequence
 
 from dotenv import load_dotenv
 
-_ROOT = Path(__file__).resolve().parents[2]
+_ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(_ROOT / ".env")
 
 

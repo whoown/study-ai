@@ -33,24 +33,20 @@ OPENAI_MODEL=gpt-4.1-mini
 ## 如何运行
 
 ```bash
-python run_demo.py --list
-python run_demo.py 1
-python run_demo.py 12
-python run_demo.py 24
+python run_demo --list
+python run_demo 1
+python run_demo 12
+python run_demo 24
 ```
 
-也可以直接进入某一章目录：
-
-```bash
-cd "第1小时-理解最小 Agent"
-python main.py
-```
+所有章节都统一从仓库根目录启动，不需要再 `cd` 进入某个小时目录。
 
 ## 推荐阅读方式
 
 1. 先看本章 README，弄清楚这一小时新增了什么能力。
-2. 再运行 `main.py`，观察中间过程打印。
+2. 再在仓库根目录运行对应章节命令，观察中间过程打印。
 3. 对照源码里的文件头注释、函数注释和关键逻辑注释理解实现。
 4. 最后自己改几个参数、提示词、工具或状态结构。
 
 学习 Agent，真正重要的不是背术语，而是逐步建立完整心智模型：`模型 + 工具 + 循环 + 记忆/状态 + 检索/协议 + 编排 + 部署`。
+

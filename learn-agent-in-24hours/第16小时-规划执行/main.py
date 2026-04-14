@@ -11,11 +11,6 @@
 本章新增能力：先拟计划，再分步执行。
 如果你是初学者，建议一边运行一边对照源码，不要只静态阅读。
 """
-# -*- coding: utf-8 -*-
-"""
-第 16 小时：规划执行 — 生成计划、按依赖逐步执行并维护 TaskState。
-"""
-
 from __future__ import annotations
 
 import json

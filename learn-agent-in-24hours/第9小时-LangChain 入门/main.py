@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
 from typing import List
 
 from dotenv import load_dotenv
@@ -24,7 +25,8 @@ from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
 
 # 加载 .env（与仓库 learn-agent-in-24hours 根目录配合使用）
-load_dotenv()
+_ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(_ROOT / '.env')
 
 
 # [教学注释] `calculator`

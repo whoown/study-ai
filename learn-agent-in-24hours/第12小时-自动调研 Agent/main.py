@@ -16,6 +16,7 @@ from __future__ import annotations
 import os
 import re
 import sys
+from pathlib import Path
 from typing import Dict, List, Tuple
 
 from dotenv import load_dotenv
@@ -24,7 +25,8 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
 
-load_dotenv()
+_ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(_ROOT / '.env')
 
 # 虚构资料：教学用，替代真实爬虫结果
 MOCK_KNOWLEDGE_BASE: List[Dict[str, str]] = [

@@ -11,11 +11,6 @@
 本章新增能力：保存中间状态并支持断点恢复。
 如果你是初学者，建议一边运行一边对照源码，不要只静态阅读。
 """
-# -*- coding: utf-8 -*-
-"""
-第 18 小时：状态持久化 — 将计划与运行态保存为 checkpoint，并演示恢复续跑。
-"""
-
 from __future__ import annotations
 
 import json

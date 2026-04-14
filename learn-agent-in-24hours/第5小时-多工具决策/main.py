@@ -18,11 +18,13 @@ import os
 import uuid
 import urllib.request
 from typing import Any, Callable, Dict, List, Tuple
+from pathlib import Path
 
 try:
     from dotenv import load_dotenv
 
-    load_dotenv()
+    _ROOT = Path(__file__).resolve().parents[1]
+    load_dotenv(_ROOT / '.env')
 except ImportError:
     pass
 

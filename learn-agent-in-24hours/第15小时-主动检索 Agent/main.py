@@ -11,11 +11,6 @@
 本章新增能力：让 Agent 自己判断何时检索。
 如果你是初学者，建议一边运行一边对照源码，不要只静态阅读。
 """
-# -*- coding: utf-8 -*-
-"""
-第 15 小时：主动检索 Agent — 由策略/LLM 决定何时检索与如何改写查询。
-"""
-
 from __future__ import annotations
 
 import json
@@ -27,7 +22,7 @@ from typing import Any, Sequence
 
 from dotenv import load_dotenv
 
-_ROOT = Path(__file__).resolve().parents[2]
+_ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(_ROOT / ".env")
 
 # 小型知识库（与检索演示配套）

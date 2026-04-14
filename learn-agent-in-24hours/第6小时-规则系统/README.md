@@ -70,7 +70,8 @@ Guardrails 的必要性可以从三个维度理解。第一是**安全性**：Ag
 
 ## 运行方式
 
+请在仓库根目录运行：
+
 ```bash
-cd "第6小时-规则系统"
-python main.py
+python run_demo 6
 ```

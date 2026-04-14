@@ -74,7 +74,8 @@ Agentic RAG 是传统 RAG 向 Agent 范式演进的方向。在传统 RAG 中，
 
 ## 运行方式
 
+请在仓库根目录运行：
+
 ```bash
-cd "第15小时-主动检索 Agent"
-python main.py
+python run_demo 15
 ```

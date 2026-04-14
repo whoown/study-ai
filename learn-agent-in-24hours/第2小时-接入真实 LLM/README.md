@@ -62,7 +62,8 @@ Fallback 设计还涉及一个重要的权衡：**可用性 vs 准确性**。降
 
 ## 运行方式
 
+请在仓库根目录运行：
+
 ```bash
-cd "第2小时-接入真实 LLM"
-python main.py
+python run_demo 2
 ```

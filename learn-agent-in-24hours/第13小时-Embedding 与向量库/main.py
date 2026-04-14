@@ -11,13 +11,6 @@
 本章新增能力：建立语义向量与相似度检索的直觉。
 如果你是初学者，建议一边运行一边对照源码，不要只静态阅读。
 """
-# -*- coding: utf-8 -*-
-"""
-第 13 小时：Embedding 与向量库 — 最小可运行示例。
-
-流程：准备语料 → 写入向量库（Chroma 或内存降级）→ 相似度检索。
-"""
-
 from __future__ import annotations
 
 import hashlib
@@ -30,7 +23,7 @@ from typing import Sequence
 from dotenv import load_dotenv
 
 # 加载 learn-agent-in-24hours/.env
-_ROOT = Path(__file__).resolve().parents[2]
+_ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(_ROOT / ".env")
 
 # 教学用语料：虚构产品说明

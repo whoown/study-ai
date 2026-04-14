@@ -102,7 +102,8 @@ Checkpoint 的保存频率直接影响系统的性能和恢复能力之间的平
 
 ## 运行方式
 
+请在仓库根目录运行：
+
 ```bash
-cd "第18小时-状态持久化"
-python main.py
+python run_demo 18
 ```

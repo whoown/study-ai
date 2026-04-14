@@ -76,7 +76,8 @@ MCP 协议与传输层解耦，目前主要支持两种传输方式：
 
 ## 运行方式
 
+请在仓库根目录运行：
+
 ```bash
-cd "第11小时-MCP 入门"
-python main.py
+python run_demo 11
 ```
