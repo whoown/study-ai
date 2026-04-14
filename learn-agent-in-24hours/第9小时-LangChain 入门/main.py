@@ -16,11 +16,10 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
-from typing import List
+from typing import Any
 
 from dotenv import load_dotenv
-from langchain.agents import AgentExecutor, create_tool_calling_agent
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain.agents import create_agent
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
 
@@ -55,34 +54,57 @@ def build_llm() -> ChatOpenAI:
 
 # [教学注释] `build_agent`
 # 把模型、工具与提示词装配成 Agent。
+# LangChain 1.x 用 create_agent 替代旧版 AgentExecutor + create_tool_calling_agent。
+# create_agent 内部基于 LangGraph 构建「调用模型→执行工具→再调模型」的循环图，
+# 返回一个可直接 invoke 的 CompiledStateGraph。
 
-def build_agent(tools: List):
-    """组装「会调工具的 Agent」：create_tool_calling_agent + AgentExecutor 封装循环逻辑。"""
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                "你是数学助手。需要计算时务必调用 calculator 工具，不要心算瞎猜。"
-                " 用户问普通闲聊可以简短回答。",
-            ),
-            ("human", "{input}"),
-            MessagesPlaceholder("agent_scratchpad"),
-        ]
-    )
+def build_agent(tools: list):
+    """组装「会调工具的 Agent」：create_agent 封装 tool-calling 循环。"""
     llm = build_llm()
-    agent = create_tool_calling_agent(llm, tools, prompt)
-    return AgentExecutor(agent=agent, tools=tools, verbose=True, max_iterations=5)
+    return create_agent(
+        model=llm,
+        tools=tools,
+        system_prompt=(
+            "你是数学助手。需要计算时务必调用 calculator 工具，不要心算瞎猜。"
+            " 用户问普通闲聊可以简短回答。"
+        ),
+        debug=True,
+    )
+
+
+# [教学注释] `extract_final_output`
+# LangChain 1.x 的 create_agent 返回 {"messages": [...]}，
+# 最后一条 AIMessage.content 就是模型的最终自然语言回答。
+
+def extract_final_output(result: Any) -> str:
+    """从 create_agent 返回的 state dict 中提取最终回答文本。"""
+    messages = result.get("messages", []) if isinstance(result, dict) else []
+    if not messages:
+        return str(result)
+
+    content = getattr(messages[-1], "content", messages[-1])
+    if isinstance(content, str):
+        return content
+    # content 有时是 list[dict]（多模态场景），拼接其中 text 部分
+    if isinstance(content, list):
+        parts = [
+            str(item.get("text", "")) if isinstance(item, dict) and item.get("type") == "text"
+            else str(item)
+            for item in content
+        ]
+        return "".join(parts).strip() or str(content)
+    return str(content)
 
 
 # [教学注释] `simulate_without_api`
-# 无 API Key 时的教学降级分支。
+# 无法调用真实模型时的教学降级分支。
 
 def simulate_without_api() -> None:
-    """无 API Key：不联网，演示「若接好 Key，框架会替你跑完 tool 循环」。"""
-    print("[教学模拟] 未检测到 OPENAI_API_KEY，跳过真实 LLM 与 AgentExecutor。")
-    print("[教学模拟] 若已配置 Key，AgentExecutor 会：")
-    print("  1) 把用户问题交给 ChatOpenAI；")
-    print("  2) 若返回 tool_calls，则执行 calculator 并把结果写入 agent_scratchpad；")
+    """不联网，演示「若环境正常，框架会替你跑完 tool 循环」。"""
+    print("[教学模拟] 未检测到 OPENAI_API_KEY，跳过真实 LLM 与 Agent。")
+    print("[教学模拟] 若环境正常，create_agent 构建的图会：")
+    print("  1) 把用户消息和 system_prompt 交给 ChatOpenAI；")
+    print("  2) 若返回 tool_calls，则执行 calculator 并把结果作为 ToolMessage 回传；")
     print("  3) 再次调用模型直到得到最终自然语言答案。")
     print("[教学模拟] 手工调用一次工具，展示「工具层」长什么样：")
     print(calculator.invoke({"operation": "add", "a": 2, "b": 3}))
@@ -95,10 +117,11 @@ def run_demo(user_input: str) -> None:
     if not os.getenv("OPENAI_API_KEY"):
         simulate_without_api()
         return
+
     tools = [calculator]
-    executor = build_agent(tools)
-    result = executor.invoke({"input": user_input})
-    print("\n=== 最终回答 ===\n", result.get("output", result))
+    agent = build_agent(tools)
+    result = agent.invoke({"messages": [{"role": "user", "content": user_input}]})
+    print("\n=== 最终回答 ===\n", extract_final_output(result))
 
 
 # [教学注释] `main`

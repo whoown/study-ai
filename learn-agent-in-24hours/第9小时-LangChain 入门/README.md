@@ -14,15 +14,15 @@ LangChain 解决的核心问题是**胶水代码的重复编写**。在没有框
 
 LangChain 的设计哲学是"组合优于继承"——它提供大量小而专注的组件（LLM 封装、提示词模板、输出解析器、工具、检索器等），开发者通过组合这些组件来构建复杂应用，而不是继承某个巨大的基类。这种设计使得框架的各个部分可以独立使用，你可以只用它的提示词模板而不用它的 Agent，也可以只用它的工具注册机制而不用它的 Chain。
 
-### 抽象层：Chain、Agent、Tool 的统一接口
+### 抽象层：Agent、Tool 与 Graph
 
-LangChain 的抽象体系有三个核心层次：
+LangChain 1.x 的抽象体系围绕三个核心层次展开：
 
 **Tool（工具）**是最底层的抽象，代表一个可被 Agent 调用的外部能力。每个 Tool 包含名称、描述和执行函数三个要素。描述是给 LLM 看的——模型根据描述决定是否以及何时调用这个工具，因此工具描述的质量直接影响 Agent 的决策准确性。
 
-**Chain（链）**是一种将多个处理步骤串联起来的编排单元。最简单的 Chain 是 LLMChain：提示词模板 → LLM 调用 → 输出解析。更复杂的 Chain 可以嵌套多个子 Chain，形成多步骤的处理流水线。Chain 的核心价值在于它封装了步骤之间的数据流转逻辑。
+**Agent（代理）**结合了 LLM 的推理能力和 Tool 的执行能力。Agent 的执行路径不是预先确定的——它由 LLM 在运行时动态决定下一步该做什么、调用哪个工具。LangChain 1.x 中通过 `create_agent(model, tools, system_prompt)` 一行代码即可创建一个完整的 Agent，框架内部基于 LangGraph 构建「调用模型 → 执行工具 → 再调模型」的循环图。
 
-**Agent（代理）**是最高层的抽象，它结合了 LLM 的推理能力和 Tool 的执行能力。与 Chain 不同的是，Agent 的执行路径不是预先确定的——它由 LLM 在运行时动态决定下一步该做什么、调用哪个工具。这种动态决策能力是 Agent 与普通 Chain 的本质区别。
+**Graph（图）**是 LangChain 1.x 的底层编排引擎（由 LangGraph 提供）。Agent 本质上是一个编译好的状态图（CompiledStateGraph），节点包含模型调用和工具执行，边包含路由条件。下一章（第 10 小时）会直接手写图节点和边，理解 Agent 背后的编排机制。
 
 ### LangChain 的 Tool 注册机制
 
@@ -48,20 +48,19 @@ LangChain 提供了多种注册方式：使用 `@tool` 装饰器直接标注 Pyt
 
 **缺点**方面：抽象层过多是最被诟病的问题。一个简单的 LLM 调用可能经过 5-6 层封装，每层都有自己的配置和错误处理逻辑，出错时的堆栈追踪冗长且难以理解。版本迭代过快导致的 API 不稳定也是常见抱怨——升级版本后发现自己的代码大面积失效并不罕见。此外，性能开销也值得关注，框架的抽象层在热路径上会引入额外的延迟和内存消耗。
 
-在实际项目选型中，如果你的场景是快速原型验证或标准化的 RAG 应用，LangChain 是不错的选择。如果你需要高度定制化的 Agent 行为或对性能敏感，可能更适合使用更轻量的方案或直接基于 API 手写。`build_llm` 和 `build_agent` 展示了如何用 LangChain 快速组装一个功能完整的 Agent，而 `simulate_without_api` 则提供了不依赖框架的降级路径。
+在实际项目选型中，如果你的场景是快速原型验证或标准化的 RAG 应用，LangChain 是不错的选择。如果你需要高度定制化的 Agent 行为或对性能敏感，可能更适合使用更轻量的方案或直接基于 API 手写。`build_agent` 用 `create_agent` 一行代码组装出完整 Agent，而 `simulate_without_api` 则提供了不依赖框架的降级路径。
 
 ## 新手最容易卡住的点
 
-- LangChain 版本不匹配导致的导入错误。LangChain 在 0.1 到 0.2 的升级中做了大量 breaking change，`langchain` 和 `langchain-community` 包的拆分尤其容易引起混淆。确保安装的版本与代码匹配。
+- LangChain 版本不匹配导致的导入错误。LangChain 在 0.x → 1.x 的升级中做了大量 breaking change，旧版的 `AgentExecutor`、`create_tool_calling_agent` 等 API 已被移除，取而代之的是 `create_agent`。确保安装的版本与代码匹配，网上搜到的旧教程代码大概率无法直接运行。
 - 工具描述写得模糊导致 Agent 不调用或误调用工具。工具的 `description` 应明确说明"什么时候该用这个工具"以及"输入应该是什么格式"。
-- 混淆 Chain 和 Agent 的使用场景。如果执行路径是固定的，用 Chain；如果需要模型动态决策，用 Agent。
-- 调试时不知道模型实际收到了什么提示词。可以通过设置 `verbose=True` 或使用 LangSmith 查看框架发送给模型的完整请求。
+- 调试时不知道模型实际收到了什么提示词。可以通过设置 `debug=True` 或使用 LangSmith 查看框架发送给模型的完整请求。
 
 ## 建议动手实验
 
 - 给 `calculator` 工具写一个更详细的描述，观察 Agent 调用它的准确率是否提升。
 - 新增一个字符串处理工具（比如反转字符串），注册到 Agent 中，测试 Agent 能否正确识别并使用它。
-- 打开 `verbose=True`，对比框架自动构建的提示词与你在前几章手写的提示词有什么异同。
+- 打开 `debug=True`（代码中已开启），对比框架自动构建的消息流与你在前几章手写的 ReAct 循环有什么异同。
 - 运行 `simulate_without_api` 降级分支，理解在没有 API 的情况下如何模拟 Agent 行为。
 
 ## 运行方式
