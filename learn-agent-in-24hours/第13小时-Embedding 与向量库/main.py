@@ -100,6 +100,15 @@ def run_memory_demo(query: str) -> None:
 # [教学注释] `_try_chroma_embedding_function`
 # 内部辅助函数，为主流程提供局部能力。
 
+# 已知只提供 Chat Completions、不提供 /embeddings 接口的 OpenAI 兼容服务。
+# 命中时直接降级到哈希伪向量，避免在 upsert 时报 404。
+_NO_EMBEDDING_HOSTS = (
+    "api.deepseek.com",
+    "api.moonshot.cn",
+    "open.bigmodel.cn",  # 智谱走自家协议，OpenAI SDK 调 /embeddings 通常也会失败
+)
+
+
 def _try_chroma_embedding_function():
     """根据环境返回 (embedding_function, 描述字符串)。"""
     import chromadb  # noqa: F401 — 由调用方保证已导入
@@ -109,20 +118,58 @@ def _try_chroma_embedding_function():
     class HashEmbeddingFunction(EmbeddingFunction):
         """Chroma 可用的哈希伪嵌入。"""
 
+        def __init__(self, dim: int = 64) -> None:
+            self.dim = dim
+
         def __call__(self, input: Documents) -> Embeddings:
-            return [hash_embedding(t) for t in input]
+            return [hash_embedding(t, dim=self.dim) for t in input]
 
-    api_key = (os.getenv("OPENAI_API_KEY") or "").strip()
-    if api_key and api_key != "your_api_key_here":
-        try:
-            from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+    # 允许用独立的 OPENAI_EMBEDDING_* 变量指向"支持 embedding 的服务"，
+    # 这样 Chat 可以继续用 DeepSeek/Moonshot 之类的廉价模型，嵌入另走官方或自建服务。
+    emb_key = (
+        os.getenv("OPENAI_EMBEDDING_API_KEY")
+        or os.getenv("OPENAI_API_KEY")
+        or ""
+    ).strip()
+    dedicated_base = os.getenv("OPENAI_EMBEDDING_BASE_URL")
+    emb_base = (
+        dedicated_base
+        or os.getenv("OPENAI_BASE_URL")
+        or "https://api.openai.com/v1"
+    ).strip().rstrip("/")
+    emb_model = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
 
-            model = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
-            ef = OpenAIEmbeddingFunction(api_key=api_key, model_name=model)
-            return ef, f"OpenAIEmbeddingFunction（{model}）"
-        except Exception as e:  # noqa: BLE001 — 教学脚本：打印原因后降级
-            print(f"[提示] OpenAI 嵌入不可用，将使用哈希伪向量。原因：{e}")
-    return HashEmbeddingFunction(), "HashEmbeddingFunction（教学伪向量）"
+    if not emb_key or emb_key == "your_api_key_here":
+        return (
+            HashEmbeddingFunction(),
+            "HashEmbeddingFunction（未配置 API Key，使用教学伪向量）",
+        )
+
+    # 没显式指定独立的 embedding 服务，且当前 OPENAI_BASE_URL 指向已知不支持 embedding 的服务时，
+    # 直接降级，避免调用 /embeddings 时 404。
+    if dedicated_base is None and any(host in emb_base for host in _NO_EMBEDDING_HOSTS):
+        print(
+            f"[提示] 当前 OPENAI_BASE_URL={emb_base} 不提供 /embeddings 接口，"
+            "已自动降级为哈希伪向量。"
+        )
+        print(
+            "       若想用真实 Embedding，请在 .env 中额外设置："
+            "OPENAI_EMBEDDING_BASE_URL / OPENAI_EMBEDDING_API_KEY / OPENAI_EMBEDDING_MODEL。"
+        )
+        return HashEmbeddingFunction(), "HashEmbeddingFunction（教学伪向量）"
+
+    try:
+        from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+
+        ef = OpenAIEmbeddingFunction(
+            api_key=emb_key,
+            model_name=emb_model,
+            api_base=emb_base,
+        )
+        return ef, f"OpenAIEmbeddingFunction（{emb_model} @ {emb_base}）"
+    except Exception as e:  # noqa: BLE001 — 教学脚本：打印原因后降级
+        print(f"[提示] OpenAI 嵌入不可用，将使用哈希伪向量。原因：{e}")
+        return HashEmbeddingFunction(), "HashEmbeddingFunction（教学伪向量）"
 
 
 # [教学注释] `run_chroma_demo`

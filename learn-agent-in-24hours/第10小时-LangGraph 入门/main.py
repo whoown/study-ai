@@ -76,13 +76,18 @@ def build_graph(tools: List):
     graph.add_node("agent", _agent)
     graph.add_node("tools", ToolNode(tools))
 
+    # 入口先进入 agent 节点，让模型先基于当前消息决定下一步动作。
     graph.add_edge(START, "agent")
-    # tools_condition 返回 "tools" 或 "__end__"；需映射到节点名与 END
+    # agent 执行后会通过 tools_condition 判断：
+    # - 如果模型发起了工具调用，就跳到 tools 节点执行工具
+    # - 如果模型已经给出最终答复，就跳到 END 结束流程
+    # 这里的字典负责把条件函数的返回值映射到实际节点。
     graph.add_conditional_edges(
         "agent",
         tools_condition,
         {"tools": "tools", "__end__": END},
     )
+    # 工具执行完后回到 agent，让模型继续读取工具结果并决定是否继续调用工具或结束。
     graph.add_edge("tools", "agent")
     return graph.compile()
 

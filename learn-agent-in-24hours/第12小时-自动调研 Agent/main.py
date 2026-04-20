@@ -17,11 +17,10 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 from dotenv import load_dotenv
-from langchain.agents import AgentExecutor, create_tool_calling_agent
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain.agents import create_agent
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
 
@@ -119,34 +118,55 @@ def build_llm() -> ChatOpenAI:
 
 # [教学注释] `build_agent`
 # 把模型、工具与提示词装配成 Agent。
+# LangChain 1.x 用 create_agent 替代旧版 AgentExecutor + create_tool_calling_agent，
+# 内部基于 LangGraph 构建「调用模型 → 执行工具 → 再调模型」的循环图，
+# 返回一个可直接 invoke 的 CompiledStateGraph。
 
 def build_agent():
     """调研专用 Agent：框架封装多轮工具调用。"""
     tools = [mock_search, list_sources]
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                "你是严谨的产业调研助手。必须先使用工具获取资料："
-                "必要时先用 list_sources 了解有哪些文档，再用 mock_search 检索。"
-                "最终输出用 Markdown：含「要点」「风险/局限」「引用依据（doc id）」。"
-                "禁止编造样本库中不存在的事实；若资料不足请明确说明。",
-            ),
-            ("human", "{input}"),
-            MessagesPlaceholder("agent_scratchpad"),
-        ]
+    return create_agent(
+        model=build_llm(),
+        tools=tools,
+        system_prompt=(
+            "你是严谨的产业调研助手。必须先使用工具获取资料："
+            "必要时先用 list_sources 了解有哪些文档，再用 mock_search 检索。"
+            "最终输出用 Markdown：含「要点」「风险/局限」「引用依据（doc id）」。"
+            "禁止编造样本库中不存在的事实；若资料不足请明确说明。"
+        ),
+        debug=True,
     )
-    agent = create_tool_calling_agent(build_llm(), tools, prompt)
-    return AgentExecutor(agent=agent, tools=tools, verbose=True, max_iterations=8)
+
+
+# [教学注释] `_extract_final_output`
+# create_agent 返回 {"messages": [...]}，末条 AIMessage.content 即为模型最终答复。
+
+def _extract_final_output(result: Any) -> str:
+    """从 create_agent 返回的 state dict 中提取最终自然语言回答。"""
+    messages = result.get("messages", []) if isinstance(result, dict) else []
+    if not messages:
+        return str(result)
+    content = getattr(messages[-1], "content", messages[-1])
+    if isinstance(content, str):
+        return content
+    # 多模态场景 content 可能是 list[dict]，拼接其中 text 片段
+    if isinstance(content, list):
+        parts = [
+            str(item.get("text", "")) if isinstance(item, dict) and item.get("type") == "text"
+            else str(item)
+            for item in content
+        ]
+        return "".join(parts).strip() or str(content)
+    return str(content)
 
 
 # [教学注释] `run_with_llm`
 # 驱动一段完整流程，把前面准备好的零件真正串起来。
 
 def run_with_llm(question: str) -> None:
-    exe = build_agent()
-    out = exe.invoke({"input": question})
-    print("\n=== 调研输出 ===\n", out.get("output", out))
+    agent = build_agent()
+    result = agent.invoke({"messages": [{"role": "user", "content": question}]})
+    print("\n=== 调研输出 ===\n", _extract_final_output(result))
 
 
 # [教学注释] `run_offline_pipeline`
@@ -154,7 +174,7 @@ def run_with_llm(question: str) -> None:
 
 def run_offline_pipeline(question: str) -> None:
     """无 API Key：不走 LLM，用相同工具函数 + 固定模板拼报告，展示数据流。"""
-    print("[离线模式] 未配置 OPENAI_API_KEY，跳过 LLM 与 AgentExecutor。")
+    print("[离线模式] 未配置 OPENAI_API_KEY，跳过 LLM 与 create_agent 循环。")
     overview = list_sources.invoke({})
     hits = mock_search.invoke({"query": question, "top_k": 3})
     print("\n--- list_sources ---\n", overview)
@@ -164,7 +184,7 @@ def run_offline_pipeline(question: str) -> None:
     print("**资料范围**（来自 list_sources）:\n", overview)
     print("\n**检索摘录**（来自 mock_search）:\n", hits)
     print(
-        "\n**说明**: 若接入 API Key，AgentExecutor 会由模型多次调用上述工具并自主组织段落；"
+        "\n**说明**: 若接入 API Key，create_agent 会由模型多次调用上述工具并自主组织段落；"
         "此处仅演示「工具返回内容即报告素材上限」。"
     )
 
